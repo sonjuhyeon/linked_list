@@ -2,8 +2,29 @@
 
 ## `s_list_node` 클래스
 
-- **`__init__`**: 리스트 노드의 생성자입니다. 노드는 값(`val`)과 다음 노드를 가리키는 포인터(`next`), 그리고 그 노드가 속한 부모 리스트(`parent_list`)를 저장합니다.
+- **`__init__`**: 리스트 노드의 생성자입니다.
+  - 노드는 값(`val`)과 다음 노드를 가리키는 포인터(`next`), 그리고 그 노드가 속한 부모 리스트(`parent_list`)를 저장합니다.
 - **`swapWith`**: 두 노드 간에 값을 교환할 수 있도록 합니다.
+```python
+class s_list_node:
+  def __init__(self, val, parent_list = None):
+    self.val = val
+    self.next = None
+    self.parent_list = parent_list  # 노드가 속한 리스트를 추적
+
+  # 노드 간 값 교환 메서드
+  def swapWith(self, other_node):
+    # next 값을 임시로 저장
+    temp_next_self = self.next
+    temp_next_other = other_node.next
+
+    # 값과 속성을 교환
+    self.__dict__, other_node.__dict__ = other_node.__dict__, self.__dict__
+
+    # next 값을 복원
+    self.next = temp_next_self
+    other_node.next = temp_next_other
+```
 
 ---
 
