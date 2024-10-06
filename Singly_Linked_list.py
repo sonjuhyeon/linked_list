@@ -107,20 +107,22 @@ class s_linked_list:
     node.next = new_node  # 현재 노드의 다음을 새로운 노드로 설정
     self.size += 1
 
-  # 특정 노드의 다음 노드 삭제
-  def deleteAfter(self, node):
-    if self.head is None:
-      print("Error: The list is empty.")
+  # 특정 위치에 노드 삽입
+  def insertAt(self, index, val):
+    if index < 0 or index > self.size:
+      print(f"Error: Index {index} out of bounds. Cannot insert.")
       return
-    if ((node == None) or (node.next == None)):
-      print("Error: Given node is None or has no next node")
+    if index == 0:
+      self.addHead(val)
       return
-    if (node.parent_list != self):
-      print("Error: Node does not belong to this linked list")
-      return
-    node.next = node.next.next  # 특정 노드의 다음 노드를 건너뛰어 삭제
-    self.size -= 1
-
+    current = self.head
+    for _ in range(index - 1):
+      current = current.next
+    new_node = s_list_node(val, self)
+    new_node.next = current.next
+    current.next = new_node
+    self.size += 1
+    
   # 처음 노드 삭제
   def deleteHead(self):
     if (self.head == None):
@@ -145,26 +147,19 @@ class s_linked_list:
     current.next = None  # 마지막 노드의 이전 노드가 마지막이 됨
     self.size -= 1
 
-  # linked list 전체 삭제
-  def ll_clear(self):
-    self.head = None  # head를 None으로 설정하여 리스트 전체 삭제
-    self.size = 0
-
-  # 특정 위치에 노드 삽입
-  def insertAt(self, index, val):
-    if index < 0 or index > self.size:
-      print(f"Error: Index {index} out of bounds. Cannot insert.")
+  # 특정 노드의 다음 노드 삭제
+  def deleteAfter(self, node):
+    if self.head is None:
+      print("Error: The list is empty.")
       return
-    if index == 0:
-      self.addHead(val)
+    if ((node == None) or (node.next == None)):
+      print("Error: Given node is None or has no next node")
       return
-    current = self.head
-    for _ in range(index - 1):
-      current = current.next
-    new_node = s_list_node(val, self)
-    new_node.next = current.next
-    current.next = new_node
-    self.size += 1
+    if (node.parent_list != self):
+      print("Error: Node does not belong to this linked list")
+      return
+    node.next = node.next.next  # 특정 노드의 다음 노드를 건너뛰어 삭제
+    self.size -= 1
 
   # 특정 위치의 노드 삭제
   def deleteAt(self, index):
@@ -182,6 +177,11 @@ class s_linked_list:
       current = current.next
     current.next = current.next.next
     self.size -= 1
+
+  # linked list 전체 삭제
+  def ll_clear(self):
+    self.head = None  # head를 None으로 설정하여 리스트 전체 삭제
+    self.size = 0
 
   # 리스트 반전
   def reverse(self):
@@ -236,3 +236,31 @@ class s_linked_list:
       print(current.val, end=" -> ")
       current = current.next
     print(f"None, size:{self.size}")
+
+
+# removeByValue
+# 리스트에서 특정 값을 가진 첫 번째 노드를 찾아 제거하는 메서드입니다. 이 메서드는 값을 기반으로 노드를 삭제하는데 유용합니다.
+
+# removeAllByValue
+# 리스트에서 특정 값을 가진 모든 노드를 제거하는 메서드입니다. 여러 노드가 동일한 값을 가질 수 있을 때 유용합니다.
+
+# isEmpty
+# 리스트가 비어있는지 확인하는 메서드입니다. 리스트의 크기를 빠르게 확인하거나 특정 작업 전에 리스트가 비어있는지 여부를 검사할 때 사용됩니다.
+
+# contains
+# 리스트에 특정 값이 존재하는지 여부를 반환하는 메서드입니다. 값이 존재하면 True, 없으면 False를 반환합니다.
+
+# findPreviousNode
+# 특정 노드의 바로 앞에 있는 노드를 찾는 메서드입니다. 단일 연결 리스트에서는 이전 노드를 추적하기 어렵기 때문에, 이 메서드는 노드를 삭제하거나 수정할 때 도움이 됩니다.
+
+# mergeWith
+# 두 개의 단일 연결 리스트를 병합하는 메서드입니다. 하나의 리스트 끝에 다른 리스트를 연결하여 리스트를 합칠 수 있습니다.
+
+# reverseBetween(startIndex, endIndex)
+# 리스트의 일부분(지정된 인덱스 범위)을 반전시키는 메서드입니다. 리스트의 특정 구간만 역순으로 바꾸는 작업이 필요할 때 유용합니다.
+
+# getNthFromEnd(n)
+# 리스트의 끝에서부터 n번째 노드를 반환하는 메서드입니다. 리스트의 길이를 모를 때도 사용할 수 있어 마지막에서부터 특정 노드를 찾을 때 유용합니다.
+
+# toList
+# 단일 연결 리스트를 파이썬 리스트로 변환하는 메서드입니다. 이 메서드는 리스트의 데이터를 빠르게 처리하거나 외부 함수에 넘길 때 유용합니다.
