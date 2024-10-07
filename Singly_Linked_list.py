@@ -21,6 +21,7 @@ class s_list_node:
 class s_linked_list:
   def __init__(self):
     self.head = None
+    self.tail = None
     self.size = 0
 
   # 값으로 노드 찾기
@@ -85,10 +86,11 @@ class s_linked_list:
   def addLast(self, val):
     new_node = s_list_node(val, self)
     if (self.head == None):
-      self.head = new_node  # 리스트가 비어있다면 새 노드가 헤드가 됨
+      self.head = new_node  # 리스트가 비어있다면 새 노드가 헤드이자 테일이 됨
+      self.tail = new_node
     else:
-      last_node = self.getLastNode()
-      last_node.next = new_node  # 마지막 노드에 새 노드 연결
+      self.tail.next = new_node  # 마지막 노드에 새 노드 연결
+      self.tail = new_node  # 새 노드를 테일로 업데이트
     self.size += 1
 
   # 특정 노드 뒤에 노드 삽입
@@ -139,12 +141,14 @@ class s_linked_list:
       return
     if (self.head.next == None):  # 노드가 하나일 경우
       self.head = None
+      self.tail = None
       self.size -= 1
       return
     current = self.head
-    while (current.next.next != None):
+    while (current.next != self.tail):
       current = current.next
     current.next = None  # 마지막 노드의 이전 노드가 마지막이 됨
+    self.tail = current  # tail을 마지막 이전 노드로 업데이트
     self.size -= 1
 
   # 특정 노드의 다음 노드 삭제
