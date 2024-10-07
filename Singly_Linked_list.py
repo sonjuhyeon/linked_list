@@ -79,6 +79,8 @@ class s_linked_list:
   def addHead(self, val):
     new_node = s_list_node(val, self)
     new_node.next = self.head  # 새로운 노드를 현재 헤드로 설정
+    if self.size == 0:
+      self.tail = new_node
     self.head = new_node  # 새로운 노드를 헤드로 설정
     self.size += 1
 
@@ -95,7 +97,7 @@ class s_linked_list:
 
   # 특정 노드 뒤에 노드 삽입
   def addAfter(self, node, val):
-    if self.head is None:
+    if self.head == None:
       print("Error: The list is empty.")
       return
     if (node == None):
@@ -130,6 +132,8 @@ class s_linked_list:
     if (self.head == None):
       print("Error: The list is empty. Cannot delete.")
       return
+    if self.head == self.tail:  # 노드가 하나만 있는 경우
+      self.tail = None  # tail도 None으로 설정
     self.head = self.head.next  # 헤드를 다음 노드로 변경
     self.size -= 1
     if self.size < 0:  # 안전한 사이즈 관리
@@ -153,7 +157,7 @@ class s_linked_list:
 
   # 특정 노드의 다음 노드 삭제
   def deleteAfter(self, node):
-    if self.head is None:
+    if self.head == None:
       print("Error: The list is empty.")
       return
     if ((node == None) or (node.next == None)):
@@ -162,41 +166,53 @@ class s_linked_list:
     if (node.parent_list != self):
       print("Error: Node does not belong to this linked list")
       return
+    if node.next == self.tail:
+      self.tail = node
     node.next = node.next.next  # 특정 노드의 다음 노드를 건너뛰어 삭제
     self.size -= 1
 
   # 특정 위치의 노드 삭제
   def deleteAt(self, index):
-    if self.head is None:
+    if self.head == None:
       print("Error: The list is empty. Cannot delete.")
       return
     if index < 0 or index >= self.size:
       print(f"Error: Index {index} out of bounds. Cannot delete.")
       return
     if index == 0:
+      if self.size == 1:
+        self.head == None
+        self.tail == None
+      else:
         self.deleteHead()
-        return
+      self.size -= 1
+      return
     current = self.head
     for _ in range(index - 1):
       current = current.next
+    # 만약 마지막 노드를 삭제하는 경우
+    if current.next == self.tail:
+      self.tail = current
     current.next = current.next.next
     self.size -= 1
 
   # linked list 전체 삭제
   def ll_clear(self):
     self.head = None  # head를 None으로 설정하여 리스트 전체 삭제
+    self.tail = None  # tail도 초기화
     self.size = 0
 
   # 리스트 반전
   def reverse(self):
     prev = None
     current = self.head
+    self.tail = self.head  # 원래의 head가 새로운 tail이 됨
     while (current != None):
       next_node = current.next
       current.next = prev
       prev = current
       current = next_node
-    self.head = prev
+    self.head = prev # 마지막으로 방문한 노드가 새로운 head가 됨
 
   # 리스트 내 중복 값 제거
   def removeDuplicates(self):
@@ -206,6 +222,8 @@ class s_linked_list:
     while (current != None):
       if current.val in seen_values:
         prev.next = current.next  # 중복일 경우 삭제
+        if current == self.tail:
+          self.tail = prev
         self.size -= 1
       else:
         seen_values.add(current.val)
@@ -229,6 +247,18 @@ class s_linked_list:
     if node1 and node2:
       node1.swapWith(node2)  # 노드 자체에 값 교환 책임을 위임
 
+      # head 업데이트 (만약 index1 또는 index2가 0인 경우)
+      if index1 == 0:
+        self.head = node1
+      elif index2 == 0:
+        self.head = node2
+
+      # tail 업데이트 (만약 node1 또는 node2가 tail인 경우)
+      if index1 == self.size - 1:
+        self.tail = node1
+      elif index2 == self.size - 1:
+        self.tail = node2
+
   # 리스트 길이 반환
   def getLength(self):
     return self.size
@@ -236,10 +266,20 @@ class s_linked_list:
   # 모든 노드 출력
   def print_ll(self):
     current = self.head
-    while current is not None:
+    while current != None:
       print(current.val, end=" -> ")
       current = current.next
     print(f"None, size:{self.size}")
+    # print(f"None, size:{self.size}, head:{self.head.val}, tail:{self.tail.val}, tail.next:{self.tail.next}")
+
+  def toList(self):
+    result = []
+    current = self.head
+    while (current != None):
+      node_info = current.__dict__.copy()  # __dict__로 노드의 속성을 딕셔너리로 변환
+      result.append(node_info)
+      current = current.next
+    return result
 
 
 # removeByValue
