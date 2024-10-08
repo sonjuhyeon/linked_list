@@ -84,14 +84,20 @@ def test_linked_list():
   assert ll.head.val == 20, "head가 20이 아니면 오류"
   assert ll.tail.val == 40, "tail이 40이 아니면 오류"
 
-  # 13. ll_clear 테스트
+  # 13. toList and llInfoToList 테스트
+  val_list = ll.toList()
+  info = ll.llInfoToList()
+  print(val_list)
+  print(info)
+
+  # 14. ll_clear 테스트
   print("\nll_clear 테스트:")
   ll.ll_clear()
   ll.print_ll()
   assert ll.head == None, "head가 None이 아니면 오류"
   assert ll.tail == None, "tail이 None이 아니면 오류"
 
-  # 14. 예외처리 테스트
+  # 15. 예외처리 테스트
   print("\n예외처리 테스트:")
 
   # 빈 리스트에서 삭제 시도 (예외 처리 확인)

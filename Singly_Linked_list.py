@@ -272,12 +272,21 @@ class s_linked_list:
     print(f"None, size:{self.size}")
     # print(f"None, size:{self.size}, head:{self.head.val}, tail:{self.tail.val}, tail.next:{self.tail.next}")
 
-  def toList(self):
+  def llInfoToList(self):
     result = []
     current = self.head
     while (current != None):
       node_info = current.__dict__.copy()  # __dict__로 노드의 속성을 딕셔너리로 변환
       result.append(node_info)
+      current = current.next
+    return result
+  
+  def toList(self):
+    result = []
+    current = self.head
+    while (current != None):
+      value = current.val
+      result.append(value)
       current = current.next
     return result
 
@@ -288,10 +297,10 @@ class s_linked_list:
 # removeAllByValue
 # 리스트에서 특정 값을 가진 모든 노드를 제거하는 메서드입니다. 여러 노드가 동일한 값을 가질 수 있을 때 유용합니다.
 
-# isEmpty
+# isEmpty -> size로 확인 가능
 # 리스트가 비어있는지 확인하는 메서드입니다. 리스트의 크기를 빠르게 확인하거나 특정 작업 전에 리스트가 비어있는지 여부를 검사할 때 사용됩니다.
 
-# contains
+# contains -> findNodeByValue method로 확인 가능 (없으면 None, 있으면 해당 Node를 반환)
 # 리스트에 특정 값이 존재하는지 여부를 반환하는 메서드입니다. 값이 존재하면 True, 없으면 False를 반환합니다.
 
 # findPreviousNode
@@ -305,6 +314,3 @@ class s_linked_list:
 
 # getNthFromEnd(n)
 # 리스트의 끝에서부터 n번째 노드를 반환하는 메서드입니다. 리스트의 길이를 모를 때도 사용할 수 있어 마지막에서부터 특정 노드를 찾을 때 유용합니다.
-
-# toList
-# 단일 연결 리스트를 파이썬 리스트로 변환하는 메서드입니다. 이 메서드는 리스트의 데이터를 빠르게 처리하거나 외부 함수에 넘길 때 유용합니다.
