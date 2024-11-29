@@ -260,43 +260,63 @@ class s_linked_list:
   
   # 리스트에서 특정 값을 가진 첫 번째 노드를 제거
   def removeByValue(self, value):
-    current = self.head
-    prev = None
+    if self.head is None:
+      print("Error: The list is empty.")
+      return
+
+    # 첫 번째 노드가 삭제 대상일 경우
+    if self.head.val == value:
+      self.head = self.head.next  # 헤드를 다음 노드로 이동
+      self.size -= 1
+      if self.size == 0:  # 리스트가 비어 있는 경우
+        self.tail = None
+      return
+
+    # 나머지 노드 탐색
+    prev = self.head
+    current = self.head.next
 
     while current:
       if current.val == value:
-        if current == self.head:
-          self.deleteHead()
-        elif current == self.tail:
-          self.deleteLast()
-        else:
-          prev.next = current.next
-          self.size -= 1
+        prev.next = current.next  # 노드 삭제
+        if current == self.tail:  # 삭제된 노드가 테일인 경우
+          self.tail = prev
+        self.size -= 1
         return
       prev = current
       current = current.next
+
     print("Error: Value not found in the list.")
 
   # 리스트에서 특정 값을 가진 모든 노드를 제거
   def removeAllByValue(self, value):
-    current = self.head
-    prev = None
+    if self.head is None:
+      print("Error: The list is empty.")
+      return
+
+    # 첫 번째 노드들 처리 (중복된 값 포함)
+    while self.head and self.head.val == value:
+      self.head = self.head.next
+      self.size -= 1
+
+    # 리스트가 비었으면 테일을 초기화
+    if self.head is None:
+      self.tail = None
+      return
+
+    # 나머지 노드 탐색
+    prev = self.head
+    current = self.head.next
 
     while current:
       if current.val == value:
-        if current == self.head:
-          self.deleteHead()
-          current = self.head
-        elif current == self.tail:
-          self.deleteLast()
-          current = None
-        else:
-          prev.next = current.next
-          current = current.next
-          self.size -= 1
+        prev.next = current.next  # 노드 삭제
+        if current == self.tail:  # 삭제된 노드가 테일인 경우
+          self.tail = prev
+        self.size -= 1
       else:
-        prev = current
-        current = current.next
+        prev = current  # 이전 노드를 업데이트
+      current = current.next
 
   # linked list 전체 삭제
   def ll_clear(self):
