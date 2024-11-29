@@ -24,6 +24,8 @@ class s_linked_list:
     self.tail = None
     self.size = 0
 
+  # --------read method--------
+
   # 값으로 노드 찾기
   def findNodeByValue(self, value):
     current = self.head
@@ -65,6 +67,40 @@ class s_linked_list:
     for _ in range(index):
       current = current.next
     return current.val
+  
+  # 특정 노드의 바로 앞에 있는 노드를 반환
+  def findPreviousNode(self, node):
+    if not self.head or node == self.head:
+      print("Error: Node has no previous node or does not belong to this list.")
+      return None
+    
+    current = self.head
+    while current and current.next != node:
+      current = current.next
+
+    if current is None:
+      print("Error: Node not found in the list.")
+      return None
+    
+    return current
+  
+  # 리스트의 끝에서부터 n번째 노드를 반환 (리스트의 길이를 모를 때 사용)
+  def getNthFromEnd(self, n):
+    if n <= 0 or n > self.size:
+      print("Error: Invalid n value.")
+      return None
+    
+    fast = self.head
+    slow = self.head
+
+    for _ in range(n):
+      fast = fast.next
+    
+    while fast:
+      slow = slow.next
+      fast = fast.next
+
+    return slow
 
   # 마지막 노드 탐색
   def getLastNode(self):
@@ -74,6 +110,8 @@ class s_linked_list:
     while (current.next != None):
       current = current.next
     return current  # 마지막 노드 반환
+
+  # --------update method--------
 
   # 가장 앞에 노드 삽입
   def addHead(self, val):
@@ -126,7 +164,31 @@ class s_linked_list:
     new_node.next = current.next
     current.next = new_node
     self.size += 1
+
+  # 두 개의 단일 연결 리스트를 병합
+  def mergeWith(self, other_list):
+    if not isinstance(other_list, s_linked_list):
+        print("Error: Input is not a valid linked list.")
+        return
+
+    if self.head is None:
+        self.head = other_list.head
+        self.tail = other_list.tail
+    elif other_list.head is not None:
+        self.tail.next = other_list.head
+        self.tail = other_list.tail
+
+    # 병합된 노드들의 parent_list를 업데이트
+    current = other_list.head
+    while current:
+        current.parent_list = self
+        current = current.next
+
+    self.size += other_list.size
+    other_list.ll_clear()
     
+  # --------delete method--------
+
   # 처음 노드 삭제
   def deleteHead(self):
     if (self.head == None):
@@ -195,12 +257,54 @@ class s_linked_list:
       self.tail = current
     current.next = current.next.next
     self.size -= 1
+  
+  # 리스트에서 특정 값을 가진 첫 번째 노드를 제거
+  def removeByValue(self, value):
+    current = self.head
+    prev = None
+
+    while current:
+      if current.val == value:
+        if current == self.head:
+          self.deleteHead()
+        elif current == self.tail:
+          self.deleteLast()
+        else:
+          prev.next = current.next
+          self.size -= 1
+        return
+      prev = current
+      current = current.next
+    print("Error: Value not found in the list.")
+
+  # 리스트에서 특정 값을 가진 모든 노드를 제거
+  def removeAllByValue(self, value):
+    current = self.head
+    prev = None
+
+    while current:
+      if current.val == value:
+        if current == self.head:
+          self.deleteHead()
+          current = self.head
+        elif current == self.tail:
+          self.deleteLast()
+          current = None
+        else:
+          prev.next = current.next
+          current = current.next
+          self.size -= 1
+      else:
+        prev = current
+        current = current.next
 
   # linked list 전체 삭제
   def ll_clear(self):
     self.head = None  # head를 None으로 설정하여 리스트 전체 삭제
     self.tail = None  # tail도 초기화
     self.size = 0
+
+  # --------additional features method--------
 
   # 리스트 반전
   def reverse(self):
@@ -213,6 +317,35 @@ class s_linked_list:
       prev = current
       current = next_node
     self.head = prev # 마지막으로 방문한 노드가 새로운 head가 됨
+
+  # 리스트의 일부를 반전
+  def reverseBetween(self, startIndex, endIndex):
+    if startIndex < 0 or endIndex >= self.size or startIndex >= endIndex:
+      print("Error: Invalid index range.")
+      return
+    
+    dummy = s_list_node(0)
+    dummy.next = self.head
+    prev_start = dummy
+    for _ in range(startIndex):
+      prev_start = prev_start.next
+    
+    current = prev_start.next
+    prev = None
+
+    for _ in range(endIndex - startIndex + 1):
+      next_node = current.next
+      current.next = prev
+      prev = current
+      current = next_node
+
+    prev_start.next.next = current
+    prev_start.next = prev
+
+    if startIndex == 0:
+      self.head = prev
+    if endIndex == self.size - 1:
+      self.tail = self.findNodeByIndex(endIndex)
 
   # 리스트 내 중복 값 제거
   def removeDuplicates(self):
@@ -272,6 +405,7 @@ class s_linked_list:
     print(f"None, size:{self.size}")
     # print(f"None, size:{self.size}, head:{self.head.val}, tail:{self.tail.val}, tail.next:{self.tail.next}")
 
+  # 연결 리스트의 정보를 리스트로 반환
   def llInfoToList(self):
     result = []
     current = self.head
@@ -281,6 +415,7 @@ class s_linked_list:
       current = current.next
     return result
   
+  # 연결 리스트의 값들을 리스트로 반환
   def toList(self):
     result = []
     current = self.head
@@ -289,28 +424,3 @@ class s_linked_list:
       result.append(value)
       current = current.next
     return result
-
-
-# removeByValue
-# 리스트에서 특정 값을 가진 첫 번째 노드를 찾아 제거하는 메서드입니다. 이 메서드는 값을 기반으로 노드를 삭제하는데 유용합니다.
-
-# removeAllByValue
-# 리스트에서 특정 값을 가진 모든 노드를 제거하는 메서드입니다. 여러 노드가 동일한 값을 가질 수 있을 때 유용합니다.
-
-# isEmpty -> size로 확인 가능
-# 리스트가 비어있는지 확인하는 메서드입니다. 리스트의 크기를 빠르게 확인하거나 특정 작업 전에 리스트가 비어있는지 여부를 검사할 때 사용됩니다.
-
-# contains -> findNodeByValue method로 확인 가능 (없으면 None, 있으면 해당 Node를 반환)
-# 리스트에 특정 값이 존재하는지 여부를 반환하는 메서드입니다. 값이 존재하면 True, 없으면 False를 반환합니다.
-
-# findPreviousNode
-# 특정 노드의 바로 앞에 있는 노드를 찾는 메서드입니다. 단일 연결 리스트에서는 이전 노드를 추적하기 어렵기 때문에, 이 메서드는 노드를 삭제하거나 수정할 때 도움이 됩니다.
-
-# mergeWith
-# 두 개의 단일 연결 리스트를 병합하는 메서드입니다. 하나의 리스트 끝에 다른 리스트를 연결하여 리스트를 합칠 수 있습니다.
-
-# reverseBetween(startIndex, endIndex)
-# 리스트의 일부분(지정된 인덱스 범위)을 반전시키는 메서드입니다. 리스트의 특정 구간만 역순으로 바꾸는 작업이 필요할 때 유용합니다.
-
-# getNthFromEnd(n)
-# 리스트의 끝에서부터 n번째 노드를 반환하는 메서드입니다. 리스트의 길이를 모를 때도 사용할 수 있어 마지막에서부터 특정 노드를 찾을 때 유용합니다.
