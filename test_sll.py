@@ -1,4 +1,4 @@
-from Singly_Linked_list import s_linked_list as sll
+from singly_linked_list import s_linked_list as sll
 
 def test_linked_list():
   # 1. 리스트 생성
