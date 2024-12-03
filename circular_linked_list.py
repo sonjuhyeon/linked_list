@@ -129,6 +129,12 @@ class c_linked_list:
       self.tail = other_list.tail
       self.size += other_list.size
 
+    # 병합된 리스트의 모든 노드의 parent_list 속성을 현재 리스트로 변경
+    current = other_list.head
+    for _ in range(other_list.size):
+      current.parent_list = self
+      current = current.next
+
   # --------delete method--------
 
   # 처음 노드 삭제
