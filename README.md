@@ -15,16 +15,9 @@ class s_list_node:
 
   # 노드 간 값 교환 메서드
   def swapWith(self, other_node):
-    # next 값을 임시로 저장
-    temp_next_self = self.next
-    temp_next_other = other_node.next
-
-    # 값과 속성을 교환
-    self.__dict__, other_node.__dict__ = other_node.__dict__, self.__dict__
-
-    # next 값을 복원
-    self.next = temp_next_self
-    other_node.next = temp_next_other
+    if not other_node or self == other_node:
+      return
+    self.val, other_node.val = other_node.val, self.val
 ```
 
 ---
